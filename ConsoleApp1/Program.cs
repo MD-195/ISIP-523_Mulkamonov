@@ -259,3 +259,150 @@ namespace TextRoguelike
             HP = BaseHP;
         }
     }
+
+    public class Game
+    {
+        private Player player;
+        private Random random;
+        private int turn;
+
+        private List<Weapon> weapons = new List<Weapon>
+        {
+            new Weapon("Кинжал", 3),
+            new Weapon("Меч", 6),
+            new Weapon("Секира", 8),
+            new Weapon("Волшебный посох", 5)
+        };
+
+        private List<Armor> armors = new List<Armor>
+        {
+            new Armor("Кожаная броня", 3),
+            new Armor("Кольчуга", 5),
+            new Armor("Латные доспехи", 8),
+            new Armor("Волшебные одежды", 4)
+        };
+
+        public Game()
+        {
+            player = new Player();
+            random = new Random();
+            turn = 0;
+        }
+
+        public void Start()
+        {
+            Console.WriteLine("Добро пожаловать в текстовую рогалик-игру!");
+            Console.WriteLine("Цель: выживать как можно дольше, побеждая врагов и находя предметы.");
+
+            while (player.HP > 0)
+            {
+                turn++;
+                Console.WriteLine($"\n--- Ход {turn} ---");
+                player.DisplayStats();
+
+                if (player.IsFrozen)
+                {
+                    Console.WriteLine("Вы заморожены и пропускаете ход!");
+                    player.IsFrozen = false;
+                    continue;
+                }
+
+                if (turn % 10 == 0)
+                {
+                    Console.WriteLine("!!! Появляется БОСС !!!");
+                    FightBoss();
+                }
+                else
+                {
+                    if (random.Next(2) == 0) // 50% шанс
+                    {
+                        FightEnemy();
+                    }
+                    else
+                    {
+                        OpenChest();
+                    }
+                }
+
+                if (player.HP <= 0)
+                {
+                    Console.WriteLine("\n=== ИГРА ОКОНЧЕНА ===");
+                    Console.WriteLine($"Вы продержались {turn} ходов!");
+                    break;
+                }
+            }
+        }
+
+        private void FightEnemy()
+        {
+            Enemy enemy = CreateRandomEnemy();
+            Console.WriteLine($"На вас напал {enemy.Name}!");
+
+            while (enemy.IsAlive && player.HP > 0)
+            {
+                Console.WriteLine("\n--- Ваш ход ---");
+                Console.WriteLine("1 - Атаковать");
+                Console.WriteLine("2 - Защищаться");
+                Console.Write("Выберите действие: ");
+
+                string choice = Console.ReadLine();
+
+                if (choice == "1")
+                {
+                    int damage = player.Attack;
+                    enemy.TakeDamage(damage);
+                    Console.WriteLine($"Вы нанесли {damage} урона {enemy.Name}!");
+                }
+                else if (choice == "2")
+                {
+                    Console.WriteLine("Вы готовитесь к защите...");
+                    bool dodged = random.NextDouble() < 0.4; // 40% шанс уклонения
+
+                    if (dodged)
+                    {
+                        Console.WriteLine("Вы успешно уклонились от атаки!");
+                        continue;
+                    }
+                    else
+                    {
+                        double blockPercent = 0.7 + random.NextDouble() * 0.3; // 70-100% защиты
+                        int blockedDamage = (int)(player.Defense * blockPercent);
+                        Console.WriteLine($"Вы блокируете {blockedDamage} урона своей защитой!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Неверный выбор, пропускаем ход!");
+                }
+
+                if (!enemy.IsAlive)
+                {
+                    Console.WriteLine($"Вы победили {enemy.Name}!");
+                    break;
+                }
+
+                // Ход врага
+                Console.WriteLine($"\n--- Ход {enemy.Name} ---");
+
+                if (enemy is Mage || enemy is ArchmageCPlusPlus || enemy is PestovCMinusMinus)
+                {
+                    if (enemy.TryFreeze())
+                    {
+                        Console.WriteLine($"{enemy.Name} замораживает вас! Вы пропустите следующий ход.");
+                        player.IsFrozen = true;
+                    }
+                }
+
+                int enemyDamage = enemy.CalculateDamage(player);
+                player.TakeDamage(enemyDamage);
+                Console.WriteLine($"{enemy.Name} наносит вам {enemyDamage} урона!");
+
+                if (player.HP <= 0)
+                {
+                    Console.WriteLine("Вы погибли в бою...");
+                    break;
+                }
+
+                enemy.DisplayStats();
+            }
+        }
