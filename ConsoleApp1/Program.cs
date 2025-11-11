@@ -384,3 +384,44 @@ class Human
         return $"{FIO}, Возраст: {Age}, Пол: {Gender}";
     }
 }
+
+class Student : Human
+{
+    public int StudentID { get; private set; }
+    private List<Course> enrolledCourses;
+
+    public Student(string fio, int age, DateOnly birthday, string gender, int studentID)
+        : base(fio, age, birthday, gender)
+    {
+        StudentID = studentID;
+        enrolledCourses = new List<Course>();
+    }
+
+    public void EnrollInCourse(Course course)
+    {
+        if (!enrolledCourses.Contains(course))
+        {
+            enrolledCourses.Add(course);
+            course.AddStudent(this);
+        }
+    }
+
+    public void ShowEnrolledCourses()
+    {
+        Console.WriteLine($"\nКурсы студента {FIO} (ID: {StudentID}):");
+        if (enrolledCourses.Count == 0)
+        {
+            Console.WriteLine("Нет записей на курсы");
+            return;
+        }
+        foreach (var course in enrolledCourses)
+        {
+            Console.WriteLine($"- {course.CourseName} (ID: {course.CourseID})");
+        }
+    }
+
+    public override string GetInfo()
+    {
+        return $"Студент ID: {StudentID}, {base.GetInfo()}, Курсов: {enrolledCourses.Count}";
+    }
+}
