@@ -332,3 +332,35 @@ class Program
         return null;
     }
 
+    static void AddTestData()
+    {
+
+        students.Add(new Student("Бобр Курва Анатольевич", 20, new DateOnly(2003, 6, 16), "М", 1));
+        students.Add(new Student("Брейн Ротс Иванович", 21, new DateOnly(2002, 7, 21), "М", 2));
+        students.Add(new Student("Сигма-Бой Руслан Александрович", 22, new DateOnly(2001, 4, 11), "М", 3));
+
+        teachers.Add(new Teacher("ДораДура Виктория Павловна", 45, new DateOnly(1978, 1, 15), "Ж", 1, 20));
+        teachers.Add(new Teacher("Анекдотов Колобок Повесилсясович", 38, new DateOnly(1985, 7, 30), "М", 2, 15));
+
+
+        courses.Add(new Course(1, "Программирование на C#", 2024));
+        courses.Add(new Course(2, "Базы данных", 2024));
+        courses.Add(new Course(3, "Веб-разработка", 2024));
+
+
+        courses[0].AssignTeacher(teachers[0]);
+        courses[1].AssignTeacher(teachers[1]);
+        courses[2].AssignTeacher(teachers[0]);
+
+
+        students[0].EnrollInCourse(courses[0]);
+        students[0].EnrollInCourse(courses[1]);
+        students[1].EnrollInCourse(courses[0]);
+        students[2].EnrollInCourse(courses[2]);
+
+        nextStudentId = 4;
+        nextTeacherId = 3;
+        nextCourseId = 4;
+    }
+}
+
