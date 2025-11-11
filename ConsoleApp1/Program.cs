@@ -406,3 +406,80 @@ namespace TextRoguelike
                 enemy.DisplayStats();
             }
         }
+
+        private void FightBoss()
+        {
+            Enemy[] bosses = { new VVG(), new Kovalsky(), new ArchmageCPlusPlus(), new PestovCMinusMinus() };
+            Enemy boss = bosses[random.Next(bosses.Length)];
+
+            Console.WriteLine($"На вас напал {boss.Name}!");
+            boss.DisplayStats();
+
+            while (boss.IsAlive && player.HP > 0)
+            {
+                Console.WriteLine("\n--- Ваш ход ---");
+                Console.WriteLine("1 - Атаковать");
+                Console.WriteLine("2 - Защищаться");
+                Console.Write("Выберите действие: ");
+
+                string choice = Console.ReadLine();
+
+                if (choice == "1")
+                {
+                    int damage = player.Attack;
+                    boss.TakeDamage(damage);
+                    Console.WriteLine($"Вы нанесли {damage} урона {boss.Name}!");
+                }
+                else if (choice == "2")
+                {
+                    Console.WriteLine("Вы готовитесь к защите...");
+                    bool dodged = random.NextDouble() < 0.4;
+
+                    if (dodged)
+                    {
+                        Console.WriteLine("Вы успешно уклонились от атаки!");
+                        continue;
+                    }
+                    else
+                    {
+                        double blockPercent = 0.7 + random.NextDouble() * 0.3;
+                        int blockedDamage = (int)(player.Defense * blockPercent);
+                        Console.WriteLine($"Вы блокируете {blockedDamage} урона своей защитой!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Неверный выбор, пропускаем ход!");
+                }
+
+                if (!boss.IsAlive)
+                {
+                    Console.WriteLine($"Вы победили {boss.Name}!");
+                    break;
+                }
+
+                // Ход босса
+                Console.WriteLine($"\n--- Ход {boss.Name} ---");
+
+                if (boss is Mage || boss is ArchmageCPlusPlus || boss is PestovCMinusMinus)
+                {
+                    if (boss.TryFreeze())
+                    {
+                        Console.WriteLine($"{boss.Name} замораживает вас! Вы пропустите следующий ход.");
+                        player.IsFrozen = true;
+                    }
+                }
+
+                int bossDamage = boss.CalculateDamage(player);
+                player.TakeDamage(bossDamage);
+                Console.WriteLine($"{boss.Name} наносит вам {bossDamage} урона!");
+
+                if (player.HP <= 0)
+                {
+                    Console.WriteLine("Вы погибли в бою с боссом...");
+                    break;
+                }
+
+                boss.DisplayStats();
+            }
+        }
