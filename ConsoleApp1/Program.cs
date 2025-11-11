@@ -483,3 +483,81 @@ namespace TextRoguelike
                 boss.DisplayStats();
             }
         }
+
+        private Enemy CreateRandomEnemy()
+        {
+            int enemyType = random.Next(3);
+            return enemyType switch
+            {
+                0 => new Goblin(),
+                1 => new Skeleton(),
+                2 => new Mage(),
+                _ => new Goblin()
+            };
+        }
+
+        private void OpenChest()
+        {
+            Console.WriteLine("Вы нашли сундук!");
+            int itemType = random.Next(3);
+
+            switch (itemType)
+            {
+                case 0: // Зелье здоровья
+                    HealthPotion potion = new HealthPotion();
+                    Console.WriteLine($"В сундуке: {potion.GetStats()}");
+                    player.HealFull();
+                    Console.WriteLine("Ваше здоровье полностью восстановлено!");
+                    break;
+
+                case 1: // Оружие
+                    Weapon newWeapon = weapons[random.Next(weapons.Count)];
+                    Console.WriteLine($"В сундуке: {newWeapon.GetStats()}");
+                    Console.WriteLine($"Ваше текущее оружие: {player.EquippedWeapon.GetStats()}");
+                    Console.Write("Взять новое оружие? (1 - да, 2 - нет): ");
+                    string weaponChoice = Console.ReadLine();
+
+                    if (weaponChoice == "1")
+                    {
+                        player.EquipWeapon(newWeapon);
+                        Console.WriteLine($"Вы экипировали: {newWeapon.GetStats()}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Вы оставили оружие в сундуке.");
+                    }
+                    break;
+
+                case 2: // Доспехи
+                    Armor newArmor = armors[random.Next(armors.Count)];
+                    Console.WriteLine($"В сундуке: {newArmor.GetStats()}");
+                    Console.WriteLine($"Ваши текущие доспехи: {player.EquippedArmor.GetStats()}");
+                    Console.Write("Взять новые доспехи? (1 - да, 2 - нет): ");
+                    string armorChoice = Console.ReadLine();
+
+                    if (armorChoice == "1")
+                    {
+                        player.EquipArmor(newArmor);
+                        Console.WriteLine($"Вы экипировали: {newArmor.GetStats()}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Вы оставили доспехи в сундуке.");
+                    }
+                    break;
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Game game = new Game();
+            game.Start();
+
+            Console.WriteLine("\nНажмите любую клавишу для выхода...");
+            Console.ReadKey();
+        }
+    }
+}
