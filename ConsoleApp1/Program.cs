@@ -422,7 +422,7 @@ class Student : Human
 
     public override string GetInfo()
     {
-        return $"Студент ID: {StudentID}, {base.GetInfo()}, Курсов: {enrolledCourses.Count}";
+        return $"Студент ID: {StudentID}, {base.GetInfo()}, Курс: {enrolledCourses.Count}";
     }
 }
 
