@@ -467,3 +467,54 @@ class Teacher : Human
         return $"Преподаватель ID: {TeacherID}, {base.GetInfo()}, Стаж: {ExpYear} лет, Курсов: {assignedCourses.Count}";
     }
 }
+
+class Course
+{
+    public int CourseID { get; private set; }
+    public string CourseName { get; private set; }
+    public int CourseYear { get; private set; }
+    private Teacher assignedTeacher;
+    private List<Student> enrolledStudents;
+
+    public Course(int courseID, string courseName, int courseYear)
+    {
+        CourseID = courseID;
+        CourseName = courseName;
+        CourseYear = courseYear;
+        enrolledStudents = new List<Student>();
+    }
+
+    public void AssignTeacher(Teacher teacher)
+    {
+        assignedTeacher = teacher;
+        teacher.AssignToCourse(this);
+    }
+
+    public void AddStudent(Student student)
+    {
+        if (!enrolledStudents.Contains(student))
+        {
+            enrolledStudents.Add(student);
+        }
+    }
+
+    public void ShowEnrolledStudents()
+    {
+        Console.WriteLine($"\nСтуденты курса '{CourseName}' (ID: {CourseID}):");
+        if (enrolledStudents.Count == 0)
+        {
+            Console.WriteLine("Нет записанных студентов");
+            return;
+        }
+        foreach (var student in enrolledStudents)
+        {
+            Console.WriteLine($"- {student.FIO} (ID: {student.StudentID})");
+        }
+    }
+
+    public string GetInfo()
+    {
+        string teacherInfo = assignedTeacher != null ? assignedTeacher.FIO : "Не назначен";
+        return $"Курс ID: {CourseID}, {CourseName}, Год: {CourseYear}, Преподаватель: {teacherInfo}, Студентов: {enrolledStudents.Count}";
+    }
+}
