@@ -163,3 +163,99 @@ namespace TextRoguelike
                 Console.WriteLine($"Способности: {string.Join(", ", abilities)}");
         }
     }
+
+    public class Goblin : Enemy
+    {
+        public Goblin()
+        {
+            Name = "Гоблин";
+            BaseHP = 30;
+            BaseAttack = 8;
+            BaseDefense = 2;
+            CritChance = 0.2;
+            IgnoreArmor = false;
+            FreezeChance = 0;
+            HP = BaseHP;
+        }
+    }
+
+    public class Skeleton : Enemy
+    {
+        public Skeleton()
+        {
+            Name = "Скелет";
+            BaseHP = 25;
+            BaseAttack = 10;
+            BaseDefense = 3;
+            CritChance = 0;
+            IgnoreArmor = true;
+            FreezeChance = 0;
+            HP = BaseHP;
+        }
+    }
+
+    public class Mage : Enemy
+    {
+        public Mage()
+        {
+            Name = "Маг";
+            BaseHP = 20;
+            BaseAttack = 12;
+            BaseDefense = 1;
+            CritChance = 0;
+            IgnoreArmor = false;
+            FreezeChance = 0.2;
+            HP = BaseHP;
+        }
+    }
+
+    public class VVG : Goblin
+    {
+        public VVG()
+        {
+            Name = "ВВГ (Босс-Гоблин)";
+            BaseHP = (int)(30 * 2.0);
+            BaseAttack = (int)(8 * 1.5);
+            BaseDefense = (int)(2 * 1.2);
+            CritChance = 0.3;
+            HP = BaseHP;
+        }
+    }
+
+    public class Kovalsky : Skeleton
+    {
+        public Kovalsky()
+        {
+            Name = "Ковальский (Босс-Скелет)";
+            BaseHP = (int)(25 * 2.5);
+            BaseAttack = (int)(10 * 1.3);
+            BaseDefense = (int)(3 * 1.4);
+            HP = BaseHP;
+        }
+    }
+
+    public class ArchmageCPlusPlus : Mage
+    {
+        public ArchmageCPlusPlus()
+        {
+            Name = "Архимаг C++ (Босс-Маг)";
+            BaseHP = (int)(20 * 1.8);
+            BaseAttack = (int)(12 * 1.6);
+            BaseDefense = (int)(1 * 1.1);
+            FreezeChance = 0.3;
+            HP = BaseHP;
+        }
+    }
+
+    public class PestovCMinusMinus : Skeleton
+    {
+        public PestovCMinusMinus()
+        {
+            Name = "Пестов С-- (Босс-Скелет)";
+            BaseHP = (int)(25 * 1.3);
+            BaseAttack = (int)(10 * 1.8);
+            BaseDefense = (int)(3 * 0.6);
+            FreezeChance = 0.35;
+            HP = BaseHP;
+        }
+    }
