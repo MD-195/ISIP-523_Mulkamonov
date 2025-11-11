@@ -364,3 +364,23 @@ class Program
     }
 }
 
+class Human
+{
+    public string FIO { get; private set; }
+    public int Age { get; private set; }
+    public DateOnly Birthday { get; private set; }
+    public string Gender { get; private set; }
+
+    public Human(string fio, int age, DateOnly birthday, string gender)
+    {
+        FIO = fio;
+        Age = age;
+        Birthday = birthday;
+        Gender = gender;
+    }
+
+    public virtual string GetInfo()
+    {
+        return $"{FIO}, Возраст: {Age}, Пол: {Gender}";
+    }
+}
