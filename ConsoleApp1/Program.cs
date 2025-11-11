@@ -425,3 +425,45 @@ class Student : Human
         return $"Студент ID: {StudentID}, {base.GetInfo()}, Курсов: {enrolledCourses.Count}";
     }
 }
+
+class Teacher : Human
+{
+    public int TeacherID { get; private set; }
+    public int ExpYear { get; private set; }
+    private List<Course> assignedCourses;
+
+    public Teacher(string fio, int age, DateOnly birthday, string gender, int teacherID, int expYear)
+        : base(fio, age, birthday, gender)
+    {
+        TeacherID = teacherID;
+        ExpYear = expYear;
+        assignedCourses = new List<Course>();
+    }
+
+    public void AssignToCourse(Course course)
+    {
+        if (!assignedCourses.Contains(course))
+        {
+            assignedCourses.Add(course);
+        }
+    }
+
+    public void ShowAssignedCourses()
+    {
+        Console.WriteLine($"\nКурсы преподавателя {FIO} (ID: {TeacherID}):");
+        if (assignedCourses.Count == 0)
+        {
+            Console.WriteLine("Нет назначенных курсов");
+            return;
+        }
+        foreach (var course in assignedCourses)
+        {
+            Console.WriteLine($"- {course.CourseName} (ID: {course.CourseID})");
+        }
+    }
+
+    public override string GetInfo()
+    {
+        return $"Преподаватель ID: {TeacherID}, {base.GetInfo()}, Стаж: {ExpYear} лет, Курсов: {assignedCourses.Count}";
+    }
+}
